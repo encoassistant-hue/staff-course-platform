@@ -160,7 +160,7 @@ async function loadAllUserProgress() {
     allUserProgress = [];
     for (const course of allCourses) {
       try {
-        const courseProgress = await apiCall(`/api/progress?courseId=${course.id}`);
+        const courseProgress = await apiCall(`/api/progress/${course.id}`);
         allUserProgress.push(...courseProgress);
       } catch (error) {
         console.error(`Failed to load progress for course ${course.id}:`, error);
@@ -184,7 +184,7 @@ async function loadCourse(courseId = 1) {
   try {
     currentCourseId = courseId;
     courseData = await apiCall(`/api/course?courseId=${courseId}`);
-    userProgress = await apiCall(`/api/progress?courseId=${courseId}`);
+    userProgress = await apiCall(`/api/progress/${courseId}`);
   } catch (error) {
     console.error('Failed to load course:', error);
   }
@@ -644,7 +644,7 @@ function renderCourseSidebar() {
   // Back to courses button
   html += `
     <div style="padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
-      <button onclick="goHome(); return false;" style="background: none; border: none; cursor: pointer; color: var(--primary); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 5px; width: 100%;">
+      <button onclick="showCourses(); return false;" style="background: none; border: none; cursor: pointer; color: var(--primary); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 5px; width: 100%;">
         ← Back to Courses
       </button>
     </div>
@@ -979,7 +979,7 @@ async function markVideoWatched(videoId, sectionId) {
       sectionId: sectionId
     });
     
-    userProgress = await apiCall(`/api/progress?courseId=${currentCourseId}`);
+    userProgress = await apiCall(`/api/progress/${currentCourseId}`);
     
     // Reload all user progress for charts/stats
     await loadAllUserProgress();
@@ -1005,21 +1005,35 @@ async function markVideoWatched(videoId, sectionId) {
     
     // Enable next button (or finish button if last video)
     const nextBtn = document.getElementById('nextBtn');
+    console.log('🎬 Video marked complete. nextBtn element:', nextBtn);
+    console.log('📊 userProgress after update:', userProgress);
+    console.log('🔍 Current video ID:', currentVideoId);
+    console.log('📹 Is last video?', isLastVideo());
+    
     if (nextBtn) {
+      console.log('✅ Enabling next button');
       nextBtn.disabled = false;
+      nextBtn.style.opacity = '1';
+      nextBtn.style.pointerEvents = 'auto';
+      
       if (isLastVideo()) {
         nextBtn.textContent = '🎓 Finish Course';
+        console.log('🎓 Set to Finish Course button');
       } else {
         nextBtn.textContent = 'Next →';
+        console.log('➡️ Set to Next button');
       }
+    } else {
+      console.error('❌ nextBtn element not found!');
     }
     
     // Re-render sidebar to show checkmarks
     renderCourseSidebar();
     
-    showToast('Progress saved!');
+    showToast('Progress saved! ✅');
   } catch (error) {
     console.error('Failed to mark video watched:', error);
+    showError('Failed to save progress. Please try again.');
   }
 }
 
@@ -1042,17 +1056,28 @@ function canGoPrevious() {
 }
 
 function nextVideo() {
+  console.log('🎬 nextVideo() called');
+  console.log('📊 Current video ID:', currentVideoId);
+  console.log('📋 userProgress:', userProgress);
+  
   const videos = getAllVideosInOrder();
   const currentIdx = videos.findIndex(v => v.id === currentVideoId);
   const isCurrentCompleted = userProgress.some(p => p.video_id === currentVideoId && p.completed);
   
+  console.log('🔍 Is current video completed?', isCurrentCompleted);
+  console.log('📍 Current video index:', currentIdx, 'of', videos.length);
+  
   if (!isCurrentCompleted) {
+    console.error('❌ Video not completed yet');
     showError('Please finish watching this video first');
     return;
   }
   
+  console.log('✅ Video is completed, proceeding to next');
+  
   // Check if this is the last video
   if (currentIdx === videos.length - 1) {
+    console.log('🏁 This is the last video, finishing course');
     // Finish course - show certificate page
     finishCourse();
     return;
