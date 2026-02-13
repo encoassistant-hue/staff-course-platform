@@ -181,7 +181,7 @@ const coursesContent = [
     sections: [
       {
         id: 3,
-        title: 'Section 1: Product Images',
+        title: 'Image Generation & AI Humans',
         videos: [
           {
             id: 6,
@@ -194,17 +194,11 @@ const coursesContent = [
             url: 'https://stream.mux.com/PURHJG502d8nQ01IBY41NHeE7hHnJz6mDQnT01nKGc63As.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJQVVJISkc1MDJkOG5RMDFJQlk0MU5IZUU3aEhuSno2bURRblQwMW5LR2M2M0FzIiwiZXhwIjoxNzczMTg3MjAwLCJraWQiOiIySHhLVkJWUlhkQzAxaTQ2eDAwTUdPSjJ4MWlzOEIwMlJaQ0RZQndrWjhqeE1BIiwiYXVkIjoidiJ9.IsOeZVZfBRfhIuqID3o3DWZUCDHXq5E9M2o_gMYUVyxlUOJESZchsGGp689pVCYxfLwflcNzRLgHqZwlDpkDNs_y6-KJijuUGiN9HiQu4b_Y9ISuwgqUBxtulH6M62ZJmINx_bgsu0zOluOU612tQfTv-4ef0gh1HSSR8r6S3hFBRqD6FjCmjh4ix6-PG0ajhncLXnPg3zjY0MQBwKjCsh-nffoWNp54ANF7KHoRbTRrJifqhC6rVKN2Fjrlk1x3Vok8OnyjKN5vNzKf3-kmTIhX_bDhPXTJQ0AlIHE1DVZD2keLhhULndOiuBkBQ3rEmj8lTt1qQ1OskXs6qmhpkg',
             resources: [
               {
-                title: 'Product Image Prompt Generator',
+                title: 'Organic Product Image Prompt Generator',
                 url: 'https://gemini.google.com/gem/1ncygw_3KkmMNMJTbfUQWZ4V-gXVK_2L-?usp=sharing'
               }
             ]
-          }
-        ]
-      },
-      {
-        id: 4,
-        title: 'Section 2: AI Humans',
-        videos: [
+          },
           {
             id: 8,
             title: 'How To Generate Ultra-Realistic AI Humans',
