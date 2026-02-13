@@ -260,15 +260,21 @@ app.get('/api/auth/discord/callback', async (req, res) => {
     
     const discordUser = userResponse.data;
     
-    // Check guild membership
+    // Check guild membership and roles
     if (DISCORD_GUILD_ID && REQUIRED_DISCORD_ROLE_ID) {
       const memberResponse = await axios.get(
         `https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`,
         { headers: { Authorization: `Bearer ${access_token}` } }
       );
       
-      const hasRequiredRole = memberResponse.data.roles.includes(REQUIRED_DISCORD_ROLE_ID);
-      if (!hasRequiredRole) {
+      const userRoles = memberResponse.data.roles || [];
+      const hasAdminRole = ADMIN_DISCORD_ROLE_ID && userRoles.includes(ADMIN_DISCORD_ROLE_ID);
+      const hasRequiredRole = userRoles.includes(REQUIRED_DISCORD_ROLE_ID);
+      
+      // Allow if: has admin role OR has required role
+      // Deny if: has neither
+      if (!hasAdminRole && !hasRequiredRole) {
+        console.log(`Access denied for ${discordUser.username} - missing both admin and required roles`);
         return res.redirect('/?error=no_permission');
       }
     }
