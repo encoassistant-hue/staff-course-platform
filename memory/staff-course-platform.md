@@ -9,6 +9,16 @@
 ## Deployment Status: COMPLETE ✅
 All reported issues fixed. Platform ready for user testing.
 
+## Latest Update (Feb 13, 23:07 GMT+1)
+- **Restructured AI Static Ads course**: Combined 2 sections → 1 section with all 4 videos
+- **Updated Mux URLs**: New token URLs provided by user (valid tokens)
+- **Added Google Gems as resources**: 
+  - Video 2: Organic Product Image Prompt Generator
+  - Video 3: Portrait Generator  
+  - Video 4: Scene Builder
+- **Commit**: `ebeea2b` - Pushed and deployed to Railway
+- **Status**: All changes saved and committed
+
 ## Critical Technical Details
 
 ### Courses
