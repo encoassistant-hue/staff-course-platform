@@ -562,9 +562,10 @@ app.get('/api/progress/:courseId', authenticateToken, async (req, res) => {
   try {
     const { courseId } = req.params;
     const result = await pool.query(
-      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2',
+      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2 ORDER BY video_id ASC',
       [req.user.id, courseId]
     );
+    console.log(`📊 Progress for user ${req.user.id}, course ${courseId}:`, result.rows);
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching progress:', err);

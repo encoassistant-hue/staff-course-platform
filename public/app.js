@@ -349,13 +349,12 @@ function renderCoursesForHome() {
     if (courseFullData) {
       totalVideos = courseFullData.sections.reduce((sum, s) => sum + s.videos.length, 0);
       
-      // Count completed videos by checking all progress entries for this course
-      completedVideos = userProgress.filter(p => {
-        const videoInCourse = courseFullData.sections.some(section =>
-          section.videos.some(video => video.id === p.video_id)
-        );
-        return videoInCourse && p.completed;
-      }).length;
+      // CRITICAL: Only count videos marked as COMPLETED (completed === true)
+      completedVideos = allUserProgress.filter(p => 
+        p.course_id == course.id && p.completed === true
+      ).length;
+      
+      console.log(`📊 Course ${course.id} (${course.name}): ${completedVideos}/${totalVideos} completed`);
     }
     
     // Categorize course
@@ -427,15 +426,13 @@ function renderCoursesForHome() {
     const courseFullData = allCoursesFullData[course.id];
     if (courseFullData) {
       const courseTotal = courseFullData.sections.reduce((sum, s) => sum + s.videos.length, 0);
-      // Use allUserProgress for overall stats (not just current course)
-      const courseDone = allUserProgress.filter(p => {
-        const videoInCourse = courseFullData.sections.some(section =>
-          section.videos.some(video => video.id === p.video_id)
-        );
-        return videoInCourse && p.completed;
-      }).length;
+      // CRITICAL: Only count videos where completed === true
+      const courseDone = allUserProgress.filter(p => 
+        p.course_id == course.id && p.completed === true
+      ).length;
       totalVideos += courseTotal;
       totalCompleted += courseDone;
+      console.log(`📊 Overall stats update: ${course.name} = ${courseDone}/${courseTotal} done`);
     }
   });
   
@@ -928,30 +925,49 @@ function loadAndPlayVideo(videoId, sectionId, title, url, sectionName = '', reso
 
 function loadVideo(url) {
   const playerEl = document.getElementById('player');
+  console.log('🎬 Loading video:', url);
   
   // Check if it's an HLS stream (.m3u8)
   if (url.includes('.m3u8')) {
+    console.log('📺 Detected HLS stream, using HLS.js');
+    
     // Use HLS.js for HLS streams
     if (window.Hls && Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(url);
-      hls.attachMedia(playerEl);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        console.log('HLS stream loaded successfully');
-      });
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        console.error('HLS error:', data);
-      });
+      try {
+        const hls = new Hls({
+          debug: false,
+          enableWorker: true
+        });
+        
+        hls.loadSource(url);
+        hls.attachMedia(playerEl);
+        
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.log('✅ HLS manifest loaded, levels available:', hls.levels.length);
+          playerEl.play().catch(e => console.warn('Autoplay blocked:', e));
+        });
+        
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          console.error('❌ HLS error:', data);
+          if (data.fatal) {
+            showError('Error loading video. Please try refreshing.');
+          }
+        });
+      } catch (e) {
+        console.error('❌ HLS.js error:', e);
+        showError('Failed to load video');
+      }
     } else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari has native HLS support
+      console.log('📱 Using native HLS support (Safari)');
       playerEl.src = url;
       playerEl.load();
     } else {
-      console.error('HLS not supported in this browser');
-      playerEl.src = url; // Try anyway
+      console.error('❌ HLS not supported - falling back to direct src');
+      playerEl.src = url;
+      playerEl.load();
     }
   } else {
-    // Regular video format
+    console.log('🎥 Regular video format');
     playerEl.src = url;
     playerEl.load();
   }
