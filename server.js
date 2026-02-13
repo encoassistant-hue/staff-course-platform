@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
+const qs = require('qs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -245,13 +246,21 @@ app.get('/api/auth/discord/callback', async (req, res) => {
     // Exchange code for access token
     let tokenResponse;
     try {
-      tokenResponse = await axios.post('https://discord.com/api/oauth2/token', {
-        client_id: DISCORD_CLIENT_ID,
-        client_secret: DISCORD_CLIENT_SECRET,
-        code,
-        grant_type: 'authorization_code',
-        redirect_uri: DISCORD_REDIRECT_URI
-      });
+      // Discord OAuth requires form-encoded data, not JSON
+      tokenResponse = await axios.post('https://discord.com/api/oauth2/token', 
+        qs.stringify({
+          client_id: DISCORD_CLIENT_ID,
+          client_secret: DISCORD_CLIENT_SECRET,
+          code,
+          grant_type: 'authorization_code',
+          redirect_uri: DISCORD_REDIRECT_URI
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      );
       console.log('✅ [Discord OAuth] Token exchange successful');
     } catch (tokenErr) {
       console.error('❌ [Discord OAuth] Token exchange failed');
