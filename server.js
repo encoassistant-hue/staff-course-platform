@@ -396,6 +396,55 @@ app.get('/api/user', authenticateToken, async (req, res) => {
   }
 });
 
+// Get user settings
+app.get('/api/user/settings', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT theme, notifications_enabled, email_notifications FROM user_settings WHERE user_id = $1',
+      [req.user.id]
+    );
+    const settings = result.rows[0] || { theme: 'light', notifications_enabled: true, email_notifications: false };
+    res.json(settings);
+  } catch (err) {
+    console.error('Error fetching user settings:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Save user settings
+app.post('/api/user/settings', authenticateToken, async (req, res) => {
+  try {
+    const { theme, notifications_enabled, email_notifications } = req.body;
+    
+    const result = await pool.query(
+      `UPDATE user_settings 
+       SET theme = COALESCE($1, theme), 
+           notifications_enabled = COALESCE($2, notifications_enabled),
+           email_notifications = COALESCE($3, email_notifications),
+           updated_at = CURRENT_TIMESTAMP
+       WHERE user_id = $4
+       RETURNING *`,
+      [theme, notifications_enabled, email_notifications, req.user.id]
+    );
+    
+    if (result.rows.length === 0) {
+      // If no settings exist, create them
+      const insertResult = await pool.query(
+        `INSERT INTO user_settings (user_id, theme, notifications_enabled, email_notifications)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [req.user.id, theme || 'light', notifications_enabled !== false, email_notifications === true]
+      );
+      return res.json(insertResult.rows[0]);
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating user settings:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Get courses
 app.get('/api/courses', (req, res) => {
   res.json(coursesContent);
