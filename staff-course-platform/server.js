@@ -404,10 +404,21 @@ app.post('/api/completion', authenticateToken, async (req, res) => {
 // Start server
 async function start() {
   try {
-    await initializeDatabase();
+    // Initialize database but don't crash if it fails
+    try {
+      await initializeDatabase();
+    } catch (dbErr) {
+      console.warn('⚠️ Database initialization failed:', dbErr.message);
+      console.warn('ℹ️ Ensure DATABASE_URL is set in Railway variables');
+    }
+    
+    // Start server regardless
     app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
       console.log(`📍 https://staff.orthotal.com`);
+      if (!process.env.DATABASE_URL) {
+        console.warn('⚠️ WARNING: DATABASE_URL not set - database features unavailable');
+      }
     });
   } catch (err) {
     console.error('Failed to start server:', err);
