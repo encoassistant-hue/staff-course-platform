@@ -534,9 +534,21 @@ app.post('/api/user/settings', authenticateToken, async (req, res) => {
   }
 });
 
-// Get courses
+// Get all courses (with full course data including sections and videos)
 app.get('/api/courses', (req, res) => {
   res.json(coursesContent);
+});
+
+// Get specific course (with full course data including sections and videos)
+app.get('/api/course', (req, res) => {
+  const courseId = parseInt(req.query.courseId) || 1;
+  const course = coursesContent.find(c => c.id === courseId);
+  
+  if (!course) {
+    return res.status(404).json({ error: 'Course not found' });
+  }
+  
+  res.json(course);
 });
 
 // Get progress
