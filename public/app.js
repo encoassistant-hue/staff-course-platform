@@ -428,6 +428,9 @@ function renderCoursesForHome() {
   
   console.log('🔍 DEBUG: allUserProgress array:', allUserProgress);
   console.log('🔍 DEBUG: allUserProgress length:', allUserProgress.length);
+  allUserProgress.forEach(p => {
+    console.log(`   - Video ${p.video_id}, Course ${p.course_id}, Completed: ${p.completed}`);
+  });
   console.log('🔍 DEBUG: allCourses:', allCourses);
   
   allCourses.forEach(course => {

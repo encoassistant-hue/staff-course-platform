@@ -186,12 +186,12 @@ const coursesContent = [
           {
             id: 6,
             title: 'How To Generate 4K Product Images',
-            url: 'https://stream.mux.com/HMLqxxvqSX7iiT3UxyOfzANdWT02TWnA00fK2sjziMPUg.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJITUxxeHh2cVNYN2lpVDNVeHlPZnpBTmRXVDAyVFduQTAwZksyc2p6aU1QVWciLCJleHAiOjE3NzMxODcyMDAsImtpZCI6IjJIeEtWQlZSWGRDMDFpNDZ4MDBNR09KMngxaXM4QjAyUlpDRFlCd2taOGp4TUEiLCJhdWQiOiJ2In0.WgvCXrTdr9BPXK-88_L6l5QFGvaw8wBC7LS5Pkg0p92Ywa-tGmflp82vZr99yrgQdDnsOB53bzEyWQKcw6KfuT01zB6R-hhxesc6zP98_BZ-_rSFYHiOXasQDsCPHaaMeM0PQc_0GR_aohTlVLKj-nuPHi3EtDMZl3fEF3sD7cq9Zzf5btFtpGUHvRQuQK0u9rb8YcxiqpPjxUeEdfI8waJ2bs3INb_kgmclvilqHPRUQyZLIwtcfqsoZPWgyMHJt3w-i0fEFAs41kyiWHJD3Du-v86Mzomp_vCyQ8nPm_gV0yR512_VfIB9ixerT6P0jzAQVk6GqCpCLwpKLufmFQ'
+            url: 'https://stream.mux.com/HMLqxxvqSX7iiT3UxyOfzANdWT02TWnA00fK2sjziMPUg.m3u8'
           },
           {
             id: 7,
             title: 'How To Generate Organic Product Images',
-            url: 'https://stream.mux.com/PURHJG502d8nQ01IBY41NHeE7hHnJz6mDQnT01nKGc63As.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJQVVJISkc1MDJkOG5RMDFJQlk0MU5IZUU3aEhuSno2bURRblQwMW5LR2M2M0FzIiwiZXhwIjoxNzczMTg3MjAwLCJraWQiOiIySHhLVkJWUlhkQzAxaTQ2eDAwTUdPSjJ4MWlzOEIwMlJaQ0RZQndrWjhqeE1BIiwiYXVkIjoidiJ9.IsOeZVZfBRfhIuqID3o3DWZUCDHXq5E9M2o_gMYUVyxlUOJESZchsGGp689pVCYxfLwflcNzRLgHqZwlDpkDNs_y6-KJijuUGiN9HiQu4b_Y9ISuwgqUBxtulH6M62ZJmINx_bgsu0zOluOU612tQfTv-4ef0gh1HSSR8r6S3hFBRqD6FjCmjh4ix6-PG0ajhncLXnPg3zjY0MQBwKjCsh-nffoWNp54ANF7KHoRbTRrJifqhC6rVKN2Fjrlk1x3Vok8OnyjKN5vNzKf3-kmTIhX_bDhPXTJQ0AlIHE1DVZD2keLhhULndOiuBkBQ3rEmj8lTt1qQ1OskXs6qmhpkg',
+            url: 'https://stream.mux.com/PURHJG502d8nQ01IBY41NHeE7hHnJz6mDQnT01nKGc63As.m3u8',
             resources: [
               {
                 title: 'Product Image Prompt Generator',
@@ -208,7 +208,7 @@ const coursesContent = [
           {
             id: 8,
             title: 'How To Generate Ultra-Realistic AI Humans',
-            url: 'https://stream.mux.com/jIxL5IaqPBzlAqNdxvwBv9pSVRvjwsZMkAMSlN900ngo.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJqSXhMNUlhcVBCemxBcU5keHZ3QnY5cFNWUnZqd3NaTWtBTVNsTjkwMG5nbyIsImV4cCI6MTc3MzE4NzIwMCwia2lkIjoiMkh4S1ZCVlJYZEMwMWk0NngwME1HT0oyeDFpczhCMDJSWkNEWUJ3a1o4anhNQSIsImF1ZCI6InYifQ.uW8aIZ2jUzPsSYq7lbI1JeOu1wkf2BXOt2E5SIqPXhBGLe68pUlVPszFkzAoP0MPs04WvjrIfDpuP6IJIaHYiaFseVSLOoLlXM6yu6JcUv4OklrWyRge4n2_GfGlETd3sgJDfDZBnqKvVD6NTkb1Z_0pZIJGVy8x7z6mXAgEZ_tBGrqrMYreEoKR8DoMxdewc37QzbCMk0KlEWvAgqrXMcIFx6XGk9V_oSDjsK1z1bVb0cPJYjFD5tk0xyljU7BMeJlpOuX5VJEgakTnCvto9Qxv60mY8l8g7Q5eg4jFnXGamgGary_H9LS4ns9NCtVmYc6145btWebaE4wYvMi9cg',
+            url: 'https://stream.mux.com/jIxL5IaqPBzlAqNdxvwBv9pSVRvjwsZMkAMSlN900ngo.m3u8',
             resources: [
               {
                 title: 'Portrait Generator',
@@ -219,7 +219,7 @@ const coursesContent = [
           {
             id: 9,
             title: 'How To Make AI Human Do Whatever You Want',
-            url: 'https://stream.mux.com/lhhx569NykSowP00FQdlLbjQdSIZU4lNsi4J4E01301zeA.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJsaGh4NTY5TnlrU293UDAwRlFkbExialFkU0laVTRsTnNpNEo0RTAxMzAxemVBIiwiZXhwIjoxNzczMTg3MjAwLCJraWQiOiIySHhLVkJWUlhkQzAxaTQ2eDAwTUdPSjJ4MWlzOEIwMlJaQ0RZQndrWjhqeE1BIiwiYXVkIjoidiJ9.MezgoV8UiruttHYq8s3C_WjjEgAo2Q76my7LuOu95BWPlYdN-rnQn3KWG_vMrTVOFrZSjU2tV5Dtx1aJt6YWwup9V1fZaaGSLaVu2n3FeuHXok1nIrcrOlb0ElcWYROTHWQ9L6VaplS-eDmiXjyd7UjOOkJZrfUTKh4PWOKNeOjMm0fl0K8LlbclVMQzje09wbz_5OJlZ5kRGaUMRq73wSiBz0ftxCBvcHSWnJZvJFQ6Hznm6VaRT6OA_3jW4MsYoiQ--DDDNkpmnUnJ42Sqw8eWEJoqI5ZB0BqCTCEhtdcX9Mr3sDoFhYp6gKsbvhdkzGO-EEyBtZY0oIz7JVP8nQ',
+            url: 'https://stream.mux.com/lhhx569NykSowP00FQdlLbjQdSIZU4lNsi4J4E01301zeA.m3u8',
             resources: [
               {
                 title: 'Scene Builder',
