@@ -88,7 +88,12 @@ function showToast(message) {
 
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
+  const closeBtn = document.getElementById('sidebarCloseBtn');
   sidebar.classList.toggle('open');
+  // Show close button when sidebar is open on mobile
+  if (closeBtn && window.innerWidth < 768) {
+    closeBtn.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+  }
 }
 
 // ========== UTILITIES ==========
@@ -639,8 +644,8 @@ function renderCourseSidebar() {
   // Back to courses button
   html += `
     <div style="padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
-      <button onclick="goHome()" style="background: none; border: none; cursor: pointer; color: var(--primary); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 5px;">
-        ← Back
+      <button onclick="goHome(); return false;" style="background: none; border: none; cursor: pointer; color: var(--primary); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 5px; width: 100%;">
+        ← Back to Courses
       </button>
     </div>
   `;
@@ -970,8 +975,13 @@ async function markVideoWatched(videoId, sectionId) {
     
     // Enable next button (or finish button if last video)
     const nextBtn = document.getElementById('nextBtn');
-    if (nextBtn && (canGoNext() || isLastVideo())) {
+    if (nextBtn) {
       nextBtn.disabled = false;
+      if (isLastVideo()) {
+        nextBtn.textContent = '🎓 Finish Course';
+      } else {
+        nextBtn.textContent = 'Next →';
+      }
     }
     
     // Re-render sidebar to show checkmarks
@@ -1295,8 +1305,12 @@ function downloadCertificate() {
 
 function hideSidebar() {
   const sidebar = document.getElementById('sidebar');
+  const closeBtn = document.getElementById('sidebarCloseBtn');
   if (sidebar.classList.contains('open')) {
     sidebar.classList.remove('open');
+  }
+  if (closeBtn) {
+    closeBtn.style.display = 'none';
   }
 }
 
@@ -1390,10 +1404,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
   
+  // Logo click handler - go to home
+  const navLogo = document.getElementById('navbarLogo');
+  if (navLogo) {
+    navLogo.style.cursor = 'pointer';
+    navLogo.addEventListener('click', () => {
+      goHome();
+      hideSidebar();
+    });
+  }
+  
   // Close user menu when clicking outside
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.user-menu-wrapper')) {
       document.getElementById('userMenuDropdown').classList.remove('open');
+    }
+    // Close mobile menu when clicking outside of it
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('mobileMenuBtn');
+    if (!e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+      sidebar.classList.remove('open');
     }
   });
 });

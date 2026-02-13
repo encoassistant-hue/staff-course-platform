@@ -1388,8 +1388,11 @@
   <div class="app-layout" id="appLayout">
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header" onclick="goHome()" title="Go to Home">
-        <img src="https://cdn.shopify.com/s/files/1/0789/7651/6423/files/orthotal_3.png?v=1741138147" alt="Logo">
+      <div class="sidebar-header" style="display: flex; align-items: center; justify-content: space-between;">
+        <div onclick="goHome()" title="Go to Home" style="cursor: pointer; display: flex; align-items: center; flex: 1;">
+          <img src="https://cdn.shopify.com/s/files/1/0789/7651/6423/files/orthotal_3.png?v=1741138147" alt="Logo" style="height: 40px;">
+        </div>
+        <button onclick="hideSidebar()" style="background: none; border: none; color: #666; font-size: 24px; cursor: pointer; padding: 8px; display: none;" id="sidebarCloseBtn" title="Close menu">✕</button>
       </div>
 
       <nav class="sidebar-nav">
