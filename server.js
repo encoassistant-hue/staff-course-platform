@@ -545,6 +545,21 @@ app.get('/api/courses', (req, res) => {
   res.json(coursesList);
 });
 
+// CLEANUP: Delete wrong progress entry (video 6 in course 1)
+app.post('/api/cleanup-progress', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM progress WHERE user_id = $1 AND video_id = 6 AND course_id = 1 RETURNING *',
+      [req.user.id]
+    );
+    console.log('🧹 Cleaned up wrong progress entry:', result.rows);
+    res.json({ success: true, deleted: result.rowCount, entries: result.rows });
+  } catch (err) {
+    console.error('Error cleaning progress:', err);
+    res.status(500).json({ error: 'Cleanup failed' });
+  }
+});
+
 // Get specific course (with full course data including sections and videos)
 app.get('/api/course', (req, res) => {
   const courseId = parseInt(req.query.courseId) || 1;

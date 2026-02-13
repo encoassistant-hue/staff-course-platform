@@ -1495,6 +1495,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       await loadCourse(1);
       await Promise.all([loadUserSettings(), loadUserAvatar()]);
       
+      // CLEANUP: Remove wrong progress entry (video 6 in course 1)
+      try {
+        const cleanupResponse = await apiCall('/api/cleanup-progress', 'POST', {});
+        console.log('✅ Database cleanup result:', cleanupResponse);
+      } catch (e) {
+        console.warn('⚠️ Cleanup not needed or failed (not critical):', e.message);
+      }
+      
+      // Reload progress after cleanup
+      await loadAllUserProgress();
+      
       // Initialize user level
       const totalCompleted = allUserProgress.filter(p => p.completed).length;
       userCurrentLevel = calculateLevel(totalCompleted);
