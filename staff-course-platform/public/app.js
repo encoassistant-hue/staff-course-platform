@@ -504,6 +504,20 @@ function jwt_decode(token) {
 // Page initialization
 document.addEventListener('DOMContentLoaded', async () => {
   try {
+    // Check for error in URL
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
+    const details = params.get('details');
+    
+    if (error) {
+      console.error('Login error:', error, details);
+      let errorMsg = `Login failed: ${error}`;
+      if (details) errorMsg += ` - ${details}`;
+      showError(errorMsg);
+      // Clear URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
     const token = localStorage.getItem('token');
     
     if (token) {

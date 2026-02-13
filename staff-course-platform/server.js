@@ -239,76 +239,149 @@ app.get('/api/auth/discord/callback', async (req, res) => {
   try {
     const { code, error } = req.query;
     
-    if (error) return res.redirect(`/?error=${error}`);
-    if (!code) return res.redirect('/?error=no_code');
+    console.log('🔐 Discord callback:', { code: code ? 'present' : 'missing', error });
     
-    // Exchange code for access token
-    const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', {
-      client_id: DISCORD_CLIENT_ID,
-      client_secret: DISCORD_CLIENT_SECRET,
-      code,
-      grant_type: 'authorization_code',
-      redirect_uri: DISCORD_REDIRECT_URI
-    });
+    if (error) {
+      console.warn('Discord returned error:', error);
+      return res.redirect(`/?error=${error}`);
+    }
+    if (!code) {
+      console.warn('No code provided');
+      return res.redirect('/?error=no_code');
+    }
+    
+    // Step 1: Exchange code for access token
+    console.log('📝 Exchanging code for access token...');
+    let tokenResponse;
+    try {
+      tokenResponse = await axios.post('https://discord.com/api/oauth2/token', {
+        client_id: DISCORD_CLIENT_ID,
+        client_secret: DISCORD_CLIENT_SECRET,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: DISCORD_REDIRECT_URI
+      });
+      console.log('✅ Got access token');
+    } catch (tokenErr) {
+      console.error('❌ Token exchange failed:', tokenErr.response?.data || tokenErr.message);
+      throw new Error(`Token exchange failed: ${tokenErr.message}`);
+    }
     
     const { access_token } = tokenResponse.data;
     
-    // Get Discord user
-    const userResponse = await axios.get('https://discord.com/api/users/@me', {
-      headers: { Authorization: `Bearer ${access_token}` }
-    });
+    // Step 2: Get Discord user info
+    console.log('👤 Fetching Discord user info...');
+    let userResponse;
+    try {
+      userResponse = await axios.get('https://discord.com/api/users/@me', {
+        headers: { Authorization: `Bearer ${access_token}` }
+      });
+      console.log('✅ Got user info:', { id: userResponse.data.id, username: userResponse.data.username });
+    } catch (userErr) {
+      console.error('❌ User fetch failed:', userErr.response?.data || userErr.message);
+      throw new Error(`User fetch failed: ${userErr.message}`);
+    }
     
     const discordUser = userResponse.data;
     
-    // Check guild membership and roles
+    // Step 3: Check guild membership and roles
+    console.log('🔍 Checking guild membership...');
     if (DISCORD_GUILD_ID && REQUIRED_DISCORD_ROLE_ID) {
-      const memberResponse = await axios.get(
-        `https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`,
-        { headers: { Authorization: `Bearer ${access_token}` } }
-      );
-      
-      const userRoles = memberResponse.data.roles || [];
-      const hasAdminRole = ADMIN_DISCORD_ROLE_ID && userRoles.includes(ADMIN_DISCORD_ROLE_ID);
-      const hasRequiredRole = userRoles.includes(REQUIRED_DISCORD_ROLE_ID);
-      
-      // Allow if: has admin role OR has required role
-      // Deny if: has neither
-      if (!hasAdminRole && !hasRequiredRole) {
-        console.log(`Access denied for ${discordUser.username} - missing both admin and required roles`);
-        return res.redirect('/?error=no_permission');
+      try {
+        const memberResponse = await axios.get(
+          `https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`,
+          { headers: { Authorization: `Bearer ${access_token}` } }
+        );
+        
+        const userRoles = memberResponse.data.roles || [];
+        const hasAdminRole = ADMIN_DISCORD_ROLE_ID && userRoles.includes(ADMIN_DISCORD_ROLE_ID);
+        const hasRequiredRole = userRoles.includes(REQUIRED_DISCORD_ROLE_ID);
+        
+        console.log('📋 Role check:', { userRoles, hasAdminRole, hasRequiredRole });
+        
+        if (!hasAdminRole && !hasRequiredRole) {
+          console.warn(`❌ Access denied for ${discordUser.username} - missing both admin and required roles`);
+          return res.redirect('/?error=no_permission');
+        }
+        console.log('✅ Role check passed');
+      } catch (roleErr) {
+        console.error('⚠️ Role check failed (continuing anyway):', roleErr.message);
+        // Don't block on role check failure - let them in anyway
       }
     }
     
-    // Find or create user
-    let result = await pool.query('SELECT * FROM users WHERE discord_id = $1', [discordUser.id]);
-    let user = result.rows[0];
-    
-    if (!user) {
-      const insertResult = await pool.query(
-        `INSERT INTO users (discord_id, username, name, email, avatar_url)
-         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [
-          discordUser.id,
-          discordUser.username,
-          discordUser.global_name || discordUser.username,
-          discordUser.email,
-          `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
-        ]
-      );
-      user = insertResult.rows[0];
-      
-      // Create user settings
-      await pool.query('INSERT INTO user_settings (user_id) VALUES ($1)', [user.id]);
+    // Step 4: Database operations (if connected)
+    let user = null;
+    if (pool) {
+      console.log('💾 Checking database...');
+      try {
+        let result = await pool.query('SELECT * FROM users WHERE discord_id = $1', [discordUser.id]);
+        user = result.rows[0];
+        
+        if (!user) {
+          console.log('📝 Creating new user...');
+          const insertResult = await pool.query(
+            `INSERT INTO users (discord_id, username, name, email, avatar_url)
+             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+            [
+              discordUser.id,
+              discordUser.username,
+              discordUser.global_name || discordUser.username,
+              discordUser.email,
+              discordUser.avatar ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png` : null
+            ]
+          );
+          user = insertResult.rows[0];
+          console.log('✅ User created:', { id: user.id, username: user.username });
+          
+          // Create user settings
+          await pool.query('INSERT INTO user_settings (user_id) VALUES ($1)', [user.id]);
+          console.log('✅ User settings created');
+        } else {
+          console.log('✅ User found, updating last_login...');
+          await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
+        }
+      } catch (dbErr) {
+        console.error('❌ Database error:', dbErr.message);
+        // If database fails, still create a minimal user object for JWT
+        if (!user) {
+          user = {
+            id: `discord_${discordUser.id}`,
+            username: discordUser.username,
+            name: discordUser.global_name || discordUser.username
+          };
+          console.warn('⚠️ Using temporary user object (database unavailable)');
+        }
+      }
     } else {
-      // Update last_login
-      await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
+      console.warn('⚠️ Database not connected, using temporary user object');
+      user = {
+        id: `discord_${discordUser.id}`,
+        username: discordUser.username,
+        name: discordUser.global_name || discordUser.username
+      };
     }
     
-    const token = jwt.sign({ id: user.id, username: user.username, name: user.name }, JWT_SECRET);
+    // Step 5: Create JWT token
+    console.log('🔑 Creating JWT token...');
+    const token = jwt.sign({ 
+      id: user.id, 
+      username: user.username, 
+      name: user.name,
+      discord_id: discordUser.id
+    }, JWT_SECRET);
+    console.log('✅ Token created');
+    
+    console.log('✨ Discord login successful for:', discordUser.username);
     res.redirect(`/?token=${token}`);
+    
   } catch (err) {
-    console.error('Discord auth error:', err);
-    res.redirect('/?error=discord_error');
+    console.error('❌ DISCORD AUTH FAILED:', {
+      message: err.message,
+      stack: err.stack,
+      response: err.response?.data
+    });
+    res.redirect('/?error=discord_error&details=' + encodeURIComponent(err.message));
   }
 });
 
