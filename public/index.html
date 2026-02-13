@@ -6,21 +6,29 @@
   <title>Training Platform</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    /* CRITICAL: Inline CSS that executes IMMEDIATELY */
+    html, body { visibility: hidden; }
+  </style>
   <script>
-    // Apply theme IMMEDIATELY before page renders to prevent flash
-    try {
+    // Load auth state synchronously BEFORE page renders
+    (function() {
       const token = localStorage.getItem('token');
+      const theme = localStorage.getItem('theme') || 'light';
+      
       if (token) {
-        // Load theme preference if user is logged in
-        const theme = localStorage.getItem('theme') || 'light';
+        // User is logged in
         if (theme === 'dark') {
           document.documentElement.classList.add('dark-theme');
           document.body.classList.add('dark-theme');
         }
+        // Show app, hide login
+        document.write('<style>.login-screen { display: none !important; } html, body { visibility: visible; }</style>');
+      } else {
+        // User not logged in, show login screen
+        document.write('<style>.app-layout { display: none !important; } html, body { visibility: visible; }</style>');
       }
-    } catch (e) {
-      console.error('Error loading theme preference:', e);
-    }
+    })();
   </script>
   <style>
     * {
@@ -407,7 +415,6 @@
       display: flex;
       flex-direction: column;
       box-shadow: 2px 0 8px rgba(0,0,0,0.05);
-      overflow-y: auto;
       position: fixed;
       height: 100vh;
       left: 0;
