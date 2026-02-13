@@ -1302,6 +1302,23 @@ function hideSidebar() {
 
 // ========== INITIALIZATION ==========
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check for token FIRST to avoid login screen flash
+  const params = new URLSearchParams(window.location.search);
+  
+  // Handle token from URL (Discord login)
+  if (params.has('token')) {
+    localStorage.setItem('token', params.get('token'));
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+  
+  const token = localStorage.getItem('token');
+  const hasToken = !!token;
+  
+  // Show login screen only if no token, app, otherwise keep hidden until loaded
+  if (!hasToken) {
+    showLoginScreen(true);
+  }
+  
   // Check if Discord is configured
   try {
     const response = await fetch('/api/config');
@@ -1317,7 +1334,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   
   // Check for errors in URL (Discord login errors)
-  const params = new URLSearchParams(window.location.search);
   if (params.has('error')) {
     const errorCode = params.get('error');
     const errorDetails = params.get('details');
@@ -1343,14 +1359,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.history.replaceState({}, document.title, window.location.pathname);
   }
   
-  // Check for token in URL (Discord login)
-  if (params.has('token')) {
-    localStorage.setItem('token', params.get('token'));
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-  
-  const token = localStorage.getItem('token');
-  if (token) {
+  // If we have a token, load the app
+  if (hasToken) {
     try {
       // Verify token is valid
       currentUser = jwt_decode(token);
@@ -1367,6 +1377,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Apply theme
       applyTheme(userSettings.theme || 'light');
       
+      // Now show the app (hide login screen)
       showLoginScreen(false);
       updateUserInfo();
       restoreSidebar();
@@ -1377,8 +1388,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       localStorage.removeItem('token');
       showLoginScreen(true);
     }
-  } else {
-    showLoginScreen(true);
   }
   
   // Close user menu when clicking outside
