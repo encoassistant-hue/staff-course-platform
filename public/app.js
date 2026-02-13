@@ -904,13 +904,43 @@ function loadAndPlayVideo(videoId, sectionId, title, url, sectionName = '', reso
   // Enable/disable previous button based on position
   prevBtn.disabled = !canGoPrevious();
   
-  const playerEl = document.getElementById('player');
-  playerEl.src = url;
-  playerEl.load();
+  // Load video - handle HLS streams
+  loadVideo(url);
   
   setTimeout(() => {
     attachPlayerListeners(videoId, sectionId);
   }, 100);
+}
+
+function loadVideo(url) {
+  const playerEl = document.getElementById('player');
+  
+  // Check if it's an HLS stream (.m3u8)
+  if (url.includes('.m3u8')) {
+    // Use HLS.js for HLS streams
+    if (window.Hls && Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(url);
+      hls.attachMedia(playerEl);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        console.log('HLS stream loaded successfully');
+      });
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.error('HLS error:', data);
+      });
+    } else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari has native HLS support
+      playerEl.src = url;
+      playerEl.load();
+    } else {
+      console.error('HLS not supported in this browser');
+      playerEl.src = url; // Try anyway
+    }
+  } else {
+    // Regular video format
+    playerEl.src = url;
+    playerEl.load();
+  }
 }
 
 function attachPlayerListeners(videoId, sectionId) {
@@ -1328,9 +1358,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   const hasToken = !!token;
   
-  // Show login screen only if no token, app, otherwise keep hidden until loaded
+  // Show login screen only if no token, otherwise hide it
   if (!hasToken) {
     showLoginScreen(true);
+  } else {
+    // Hide login screen immediately if we have a token
+    showLoginScreen(false);
   }
   
   // Check if Discord is configured
