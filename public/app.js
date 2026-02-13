@@ -61,7 +61,8 @@ function showLoginScreen(show) {
   if (show) {
     loginScreen.classList.remove('hidden');
     appLayout.classList.remove('visible');
-    document.getElementById('username').focus();
+    const usernameField = document.getElementById('username');
+    if (usernameField) usernameField.focus();
   } else {
     loginScreen.classList.add('hidden');
     appLayout.classList.add('visible');

@@ -239,6 +239,9 @@ app.get('/api/auth/discord/callback', async (req, res) => {
     }
     
     console.log('📝 [Discord OAuth] Exchanging code for access token...');
+    console.log(`📝 [Discord OAuth] Client ID: ${DISCORD_CLIENT_ID}`);
+    console.log(`📝 [Discord OAuth] Redirect URI: ${DISCORD_REDIRECT_URI}`);
+    console.log(`📝 [Discord OAuth] Grant type: authorization_code`);
     // Exchange code for access token
     let tokenResponse;
     try {
@@ -251,7 +254,10 @@ app.get('/api/auth/discord/callback', async (req, res) => {
       });
       console.log('✅ [Discord OAuth] Token exchange successful');
     } catch (tokenErr) {
-      console.error('❌ [Discord OAuth] Token exchange failed:', tokenErr.response?.data || tokenErr.message);
+      console.error('❌ [Discord OAuth] Token exchange failed');
+      console.error('Discord API response status:', tokenErr.response?.status);
+      console.error('Discord API response data:', tokenErr.response?.data);
+      console.error('Error message:', tokenErr.message);
       return res.redirect(`/?error=token_exchange_failed&details=${encodeURIComponent(tokenErr.response?.data?.error || tokenErr.message)}`);
     }
     
