@@ -938,10 +938,10 @@ async function markVideoWatched(videoId, sectionId) {
   try {
     const oldLevel = userCurrentLevel;
     
-    await apiCall('/api/video-watched', 'POST', {
-      course_id: currentCourseId,
-      video_id: videoId,
-      section_id: sectionId
+    await apiCall('/api/progress', 'POST', {
+      courseId: currentCourseId,
+      videoId: videoId,
+      sectionId: sectionId
     });
     
     userProgress = await apiCall(`/api/progress?courseId=${currentCourseId}`);

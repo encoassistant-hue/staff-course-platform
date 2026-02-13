@@ -534,9 +534,15 @@ app.post('/api/user/settings', authenticateToken, async (req, res) => {
   }
 });
 
-// Get all courses (with full course data including sections and videos)
+// Get all courses (simplified list with video counts)
 app.get('/api/courses', (req, res) => {
-  res.json(coursesContent);
+  const coursesList = coursesContent.map(course => ({
+    id: course.id,
+    name: course.name,
+    icon: course.icon,
+    videoCount: course.sections.reduce((sum, s) => sum + s.videos.length, 0)
+  }));
+  res.json(coursesList);
 });
 
 // Get specific course (with full course data including sections and videos)
