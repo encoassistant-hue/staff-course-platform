@@ -137,6 +137,95 @@ const coursesContent = [
             id: 1,
             title: 'What is GenerativeAI',
             url: 'https://stream.mux.com/02rq00anWWJq300gHq8uww025oWs0015cG14x7hGs83qGOjw.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwMnJxMDBhbldXSnEzMDBnSHE4dXd3MDI1b1dzMDAxNWNHMTR4N2hHczgzcUdPanciLCJleHAiOjE3NzMxODcyMDAsImtpZCI6IjJIeEtWQlZSWGRDMDFpNDZ4MDBNR09KMngxaXM4QjAyUlpDRFlCd2taOGp4TUEiLCJhdWQiOiJ2In0.uwjg95xYKsonn1u-5Lc4PdNhZmijAMKvj4KYJFCfjzOYDFXgcv-htHddrQBOxMrEZhxD2D7NJpflEZyUC6sJHLCg7_j5CxSsm7k_TKGiAtLkEtXCNpWJyAeUcmN3tPOQWkINd0kQYeJYjv5fuzGTCz8wN6DRGdT1x47H0zIyNIsNNHgTzT5i9xYKAGSGojp28sNSsZnef_EoJX-Am-Q7_DbpWeXsnYZR95C-8bDomup6kWuHb0IFGv_6U86Oyy01QkpGgGN89Lnoha8tkGxbAWi5PrnlG_N0VifDElC7DfZqrJt0epwi-4SbRBYwKmJWLNKaKLdX5CQMMgAJzTDmiQ'
+          },
+          {
+            id: 2,
+            title: 'History & future of GenAI',
+            url: 'https://stream.mux.com/uLedssbt3RhiTTtd9gi5KGs8PBnc7w00Hz6Dz56vcKak.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1TGVkc3NidDNSaGlUVHRkOWdpNUtHczhQQm5jN3cwMEh6NkR6NTZ2Y0thayIsImV4cCI6MTc3MzE4NzIwMCwia2lkIjoiMkh4S1ZCVlJYZEMwMWk0NngwME1HT0oyeDFpczhCMDJSWkNEWUJ3a1o4anhNQSIsImF1ZCI6InYifQ.K3Ov4i4wF6bihIVE9EhFhjdDGxmc2ygUF1N4yjAlyHfETjlY1a7xwj9AqnHjggrpG3v8tdZ-gIz6gtJQheKU0W6NrAdTQfeacGEgDkgTc5Qg65rAkTm22g0wqNr8ibid27U4aRBfVEEG9DwcGfkA07k8jdFxb3HX2wzcuS9R6yMi2usQWIa43pMHD_iGKn6YAypHH1asZt9z15mG9HyPBDAp9BwsvH0oM-8Tl06u4EEFqf_v4OMStdjcouAuVhwq7KEivtE4JJrcADNLdpt6UyeiFBxCJeuPvWSpiqx00tg-V6s2xwkvIP2_smqq6shXUS8oxoQQR4qM59veXGvQGg'
+          },
+          {
+            id: 5,
+            title: 'GenAI Tech Stack',
+            url: 'https://stream.mux.com/uEZxWnkqmkKEOHhO3taf00BBwyduqLn4ypZz11J9kma4.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1RVp4V25rcW1rS0VPSGhPM3RhZjAwQkJ3eWR1cUxuNHlwWnoxMUo5a21hNCIsImV4cCI6MTc3MzE4NzIwMCwia2lkIjoiMkh4S1ZCVlJYZEMwMWk0NngwME1HT0oyeDFpczhCMDJSWkNEWUJ3a1o4anhNQSIsImF1ZCI6InYifQ.Ov7yRqrF5TYMX-Rnv3_Obv7b61WKkawoF_Ihac6Dzb7lcwFttvMlKYLwYL9EVkVT8YwJDRZV_xc1NH6vKKrtoqeNDBIj9WPzXPO8hMTTI5lr8qE3YBieSgvxCQx7ad-nCEbePRmbwzAP8bRHg-GX2qJBnLxRIyf7ppLOXKufn6egQ-o1OGpUOTbguxoQi3djd5NlQmgfZ3v5bAu3vRmMYzrGRttRvgsIJqU3pVrpWvo4gcea3yvYvuZ1B_D05m_E-D09GdXOmbFSEQfXOMJUeWJDA3LbXp8p1wTXXFn5DCnVOWFPhzdZjtabOSoarZlqwibLfsJRbvHwCm6lcv_G2w'
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: 'Section 2: Video Ads',
+        videos: [
+          {
+            id: 3,
+            title: 'AI UGC Ad Made From Scratch',
+            url: 'https://stream.mux.com/vcTRBHhVLze7GtA9kfn9OyK2ljpNWV8N2dqCllioUMY.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ2Y1RSQkhoVkx6ZTdHdEE5a2ZuOU95SzJsanBOV1Y4TjJkcUNsbGlvVU1ZIiwiZXhwIjoxNzczMTg3MjAwLCJraWQiOiIySHhLVkJWUlhkQzAxaTQ2eDAwTUdPSjJ4MWlzOEIwMlJaQ0RZQndrWjhqeE1BIiwiYXVkIjoidiJ9.uMk3xnlUgrHW8x7eUSY8oM7QBstP4u5Uly2ImpNE5W1s_6eIT1l_Ha8mXoq_NUCxmEh-gK6RBajNDrIOWUZNlwndS7GWBKK-aQBCmKKiz5MESCzol-OCVW9QYsv-SpgFoEFeSFCiIFprEsmdVt-fhmZQffDFuXrSXbEro9BtRD1u9Wh66I31SNqDHt4NGIU6FDEPU-u14Gxk58H_PfMj8a32gBwChHFHeR14fcX8rgjNICMIJqbkomZhaXlNE-6L4volrswnz2Ya8iUPntnUFo-oR3-5F3zHj-xbnow__NNU0DGO-O5MI5muk5PKVKBS2Hy9BRKl6BrWQoOK4pxGjg'
+          },
+          {
+            id: 4,
+            title: 'AI Animation Ad Made From Scratch',
+            url: 'https://stream.mux.com/d6wPSb11svUVlBFlLokh5011yq018aDe00nMDlMEJrnw3w.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkNndQU2IxMXN2VVZsQkZsTG9raDUwMTF5cTAxOGFEZTAwbk1EbE1FSnJudzN3IiwiZXhwIjoxNzczMTg3MjAwLCJraWQiOiIySHhLVkJWUlhkQzAxaTQ2eDAwTUdPSjJ4MWlzOEIwMlJaQ0RZQndrWjhqeE1BIiwiYXVkIjoidiJ9.A5ElEGV2o827H5lcYYgq7nmvvxoIFkMMfEO4fgia6jo9CWRqOIolZlfkPrFM23GtmmlqgjrAHJKq1QHc_F49Vx-WPPG4Di_sHmavskwM_jAPQUzetzhIJo-_22EgbwqoMosBWD_jzwCMfVStc0gFbM5MgAIcrs-rM56PqufWwxyxAo9CUSW0GnjfkWl63mqoiPjzFQIs31eho6360n-X1NAubrvKTUod-fyv5E2-gKAS2kPUt4KyfHx6U-RcWxNhzL-nlB_MHGYCutLk4-m2Km1fHMjhU1_cVxusvSNEnDc97sW2lI5TinF73g06FO2xBIKFo4lzFTeqv0Q66Nq1lA',
+            resources: [
+              {
+                title: 'Zack D Films - Visual Prompt Engineer',
+                url: 'https://chatgpt.com/g/g-68db88718fb481919f26dd85b2ba6852-zackdfilms-visual-prompt-engineer'
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: 'AI Static Ads',
+    icon: '📸',
+    sections: [
+      {
+        id: 3,
+        title: 'Section 1: Product Images',
+        videos: [
+          {
+            id: 6,
+            title: 'How To Generate 4K Product Images',
+            url: 'https://stream.mux.com/HMLqxxvqSX7iiT3UxyOfzANdWT02TWnA00fK2sjziMPUg.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJITUxxeHh2cVNYN2lpVDNVeHlPZnpBTmRXVDAyVFduQTAwZksyc2p6aU1QVWciLCJleHAiOjE3NzMxODcyMDAsImtpZCI6IjJIeEtWQlZSWGRDMDFpNDZ4MDBNR09KMngxaXM4QjAyUlpDRFlCd2taOGp4TUEiLCJhdWQiOiJ2In0.WgvCXrTdr9BPXK-88_L6l5QFGvaw8wBC7LS5Pkg0p92Ywa-tGmflp82vZr99yrgQdDnsOB53bzEyWQKcw6KfuT01zB6R-hhxesc6zP98_BZ-_rSFYHiOXasQDsCPHaaMeM0PQc_0GR_aohTlVLKj-nuPHi3EtDMZl3fEF3sD7cq9Zzf5btFtpGUHvRQuQK0u9rb8YcxiqpPjxUeEdfI8waJ2bs3INb_kgmclvilqHPRUQyZLIwtcfqsoZPWgyMHJt3w-i0fEFAs41kyiWHJD3Du-v86Mzomp_vCyQ8nPm_gV0yR512_VfIB9ixerT6P0jzAQVk6GqCpCLwpKLufmFQ'
+          },
+          {
+            id: 7,
+            title: 'How To Generate Organic Product Images',
+            url: 'https://stream.mux.com/PURHJG502d8nQ01IBY41NHeE7hHnJz6mDQnT01nKGc63As.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJQVVJISkc1MDJkOG5RMDFJQlk0MU5IZUU3aEhuSno2bURRblQwMW5LR2M2M0FzIiwiZXhwIjoxNzczMTg3MjAwLCJraWQiOiIySHhLVkJWUlhkQzAxaTQ2eDAwTUdPSjJ4MWlzOEIwMlJaQ0RZQndrWjhqeE1BIiwiYXVkIjoidiJ9.IsOeZVZfBRfhIuqID3o3DWZUCDHXq5E9M2o_gMYUVyxlUOJESZchsGGp689pVCYxfLwflcNzRLgHqZwlDpkDNs_y6-KJijuUGiN9HiQu4b_Y9ISuwgqUBxtulH6M62ZJmINx_bgsu0zOluOU612tQfTv-4ef0gh1HSSR8r6S3hFBRqD6FjCmjh4ix6-PG0ajhncLXnPg3zjY0MQBwKjCsh-nffoWNp54ANF7KHoRbTRrJifqhC6rVKN2Fjrlk1x3Vok8OnyjKN5vNzKf3-kmTIhX_bDhPXTJQ0AlIHE1DVZD2keLhhULndOiuBkBQ3rEmj8lTt1qQ1OskXs6qmhpkg',
+            resources: [
+              {
+                title: 'Product Image Prompt Generator',
+                url: 'https://gemini.google.com/gem/1ncygw_3KkmMNMJTbfUQWZ4V-gXVK_2L-?usp=sharing'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: 'Section 2: AI Humans',
+        videos: [
+          {
+            id: 8,
+            title: 'How To Generate Ultra-Realistic AI Humans',
+            url: 'https://stream.mux.com/jIxL5IaqPBzlAqNdxvwBv9pSVRvjwsZMkAMSlN900ngo.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJqSXhMNUlhcVBCemxBcU5keHZ3QnY5cFNWUnZqd3NaTWtBTVNsTjkwMG5nbyIsImV4cCI6MTc3MzE4NzIwMCwia2lkIjoiMkh4S1ZCVlJYZEMwMWk0NngwME1HT0oyeDFpczhCMDJSWkNEWUJ3a1o4anhNQSIsImF1ZCI6InYifQ.uW8aIZ2jUzPsSYq7lbI1JeOu1wkf2BXOt2E5SIqPXhBGLe68pUlVPszFkzAoP0MPs04WvjrIfDpuP6IJIaHYiaFseVSLOoLlXM6yu6JcUv4OklrWyRge4n2_GfGlETd3sgJDfDZBnqKvVD6NTkb1Z_0pZIJGVy8x7z6mXAgEZ_tBGrqrMYreEoKR8DoMxdewc37QzbCMk0KlEWvAgqrXMcIFx6XGk9V_oSDjsK1z1bVb0cPJYjFD5tk0xyljU7BMeJlpOuX5VJEgakTnCvto9Qxv60mY8l8g7Q5eg4jFnXGamgGary_H9LS4ns9NCtVmYc6145btWebaE4wYvMi9cg',
+            resources: [
+              {
+                title: 'Portrait Generator',
+                url: 'https://gemini.google.com/gem/15sst5Iy4Gc0ka3UTzAUopdwQXB22EF4r?usp=sharing'
+              }
+            ]
+          },
+          {
+            id: 9,
+            title: 'How To Make AI Human Do Whatever You Want',
+            url: 'https://stream.mux.com/lhhx569NykSowP00FQdlLbjQdSIZU4lNsi4J4E01301zeA.m3u8?token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJsaGh4NTY5TnlrU293UDAwRlFkbExialFkU0laVTRsTnNpNEo0RTAxMzAxemVBIiwiZXhwIjoxNzczMTg3MjAwLCJraWQiOiIySHhLVkJWUlhkQzAxaTQ2eDAwTUdPSjJ4MWlzOEIwMlJaQ0RZQndrWjhqeE1BIiwiYXVkIjoidiJ9.MezgoV8UiruttHYq8s3C_WjjEgAo2Q76my7LuOu95BWPlYdN-rnQn3KWG_vMrTVOFrZSjU2tV5Dtx1aJt6YWwup9V1fZaaGSLaVu2n3FeuHXok1nIrcrOlb0ElcWYROTHWQ9L6VaplS-eDmiXjyd7UjOOkJZrfUTKh4PWOKNeOjMm0fl0K8LlbclVMQzje09wbz_5OJlZ5kRGaUMRq73wSiBz0ftxCBvcHSWnJZvJFQ6Hznm6VaRT6OA_3jW4MsYoiQ--DDDNkpmnUnJ42Sqw8eWEJoqI5ZB0BqCTCEhtdcX9Mr3sDoFhYp6gKsbvhdkzGO-EEyBtZY0oIz7JVP8nQ',
+            resources: [
+              {
+                title: 'Scene Builder',
+                url: 'https://gemini.google.com/gem/1hXD9KITk3HrssaqB126k1972kLJwTOXo?usp=sharing'
+              }
+            ]
           }
         ]
       }
