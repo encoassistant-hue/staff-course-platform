@@ -45,12 +45,21 @@ function discordLogin() {
 }
 
 function handleLogout() {
+  console.log('🚪 Logout initiated');
   localStorage.removeItem('token');
+  localStorage.removeItem('userSettings');
   currentUser = null;
   courseData = null;
   allCourses = [];
-  document.getElementById('loginForm').reset();
+  allCoursesFullData = {};
+  userProgress = [];
+  allUserProgress = [];
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) loginForm.reset();
+  document.body.classList.remove('dark-theme');
   showLoginScreen(true);
+  hideSidebar();
+  console.log('✅ Logged out successfully');
 }
 
 // ========== UI UTILITIES ==========
@@ -193,6 +202,10 @@ async function loadCourse(courseId = 1) {
 async function loadUserSettings() {
   try {
     userSettings = await apiCall('/api/user/settings');
+    // Cache theme in localStorage for instant load on page refresh
+    if (userSettings.theme) {
+      localStorage.setItem('theme', userSettings.theme);
+    }
   } catch (error) {
     console.error('Failed to load settings:', error);
     userSettings = {};
@@ -414,7 +427,8 @@ function renderCoursesForHome() {
     const courseFullData = allCoursesFullData[course.id];
     if (courseFullData) {
       const courseTotal = courseFullData.sections.reduce((sum, s) => sum + s.videos.length, 0);
-      const courseDone = userProgress.filter(p => {
+      // Use allUserProgress for overall stats (not just current course)
+      const courseDone = allUserProgress.filter(p => {
         const videoInCourse = courseFullData.sections.some(section =>
           section.videos.some(video => video.id === p.video_id)
         );
@@ -1294,6 +1308,9 @@ function toggleSetting(key) {
 
 async function saveSettings() {
   try {
+    // Save theme to localStorage immediately to prevent flash on page load
+    localStorage.setItem('theme', userSettings.theme || 'light');
+    
     await apiCall('/api/user/settings', 'POST', userSettings);
     applyTheme(userSettings.theme || 'light');
     showToast('Settings saved!');

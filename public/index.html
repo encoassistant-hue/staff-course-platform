@@ -6,6 +6,22 @@
   <title>Training Platform</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    // Apply theme IMMEDIATELY before page renders to prevent flash
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Load theme preference if user is logged in
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark-theme');
+          document.body.classList.add('dark-theme');
+        }
+      }
+    } catch (e) {
+      console.error('Error loading theme preference:', e);
+    }
+  </script>
   <style>
     * {
       margin: 0;
@@ -484,6 +500,8 @@
     .sidebar-footer {
       padding: 20px;
       border-top: 1px solid var(--border);
+      margin-top: auto;
+      flex-shrink: 0;
     }
 
     .logout-btn {
