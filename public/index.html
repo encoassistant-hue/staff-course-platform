@@ -7,30 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
-    /* CRITICAL: Inline CSS that executes IMMEDIATELY */
-    html, body { visibility: hidden; }
-  </style>
-  <script>
-    // Load auth state synchronously BEFORE page renders
-    (function() {
-      const token = localStorage.getItem('token');
-      const theme = localStorage.getItem('theme') || 'light';
-      
-      if (token) {
-        // User is logged in
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark-theme');
-          document.body.classList.add('dark-theme');
-        }
-        // Show app, hide login
-        document.write('<style>.login-screen { display: none !important; } html, body { visibility: visible; }</style>');
-      } else {
-        // User not logged in, show login screen
-        document.write('<style>.app-layout { display: none !important; } html, body { visibility: visible; }</style>');
-      }
-    })();
-  </script>
-  <style>
     * {
       margin: 0;
       padding: 0;
