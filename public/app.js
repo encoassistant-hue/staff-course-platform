@@ -1319,6 +1319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   if (params.has('error')) {
     const errorCode = params.get('error');
+    const errorDetails = params.get('details');
     const errorMessages = {
       'missing_role': '❌ You don\'t have the required role to access this platform. Please ask an admin to give you the "editors" role.',
       'not_in_guild': '❌ You\'re not in the required Discord server. Please join the server first.',
@@ -1326,9 +1327,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       'auth_error': '❌ Discord authentication failed. Please try again.',
       'no_code': '❌ Discord authorization was cancelled.',
       'db_error': '❌ Database error. Please try again.',
-      'create_user_error': '❌ Error creating user account. Please try again.'
+      'create_user_error': '❌ Error creating user account. Please try again.',
+      'no_permission': '❌ You don\'t have permission to access this platform.',
+      'token_exchange_failed': '❌ Failed to exchange authorization code for token.',
+      'fetch_user_failed': '❌ Failed to fetch your Discord user information.',
+      'discord_error': '❌ Discord authentication error.'
     };
-    showError(errorMessages[errorCode] || `❌ Error: ${errorCode}`);
+    let errorMessage = errorMessages[errorCode] || `❌ Error: ${errorCode}`;
+    if (errorDetails) {
+      errorMessage += ` (Details: ${decodeURIComponent(errorDetails)})`;
+    }
+    console.error('🚨 Auth Error:', errorCode, errorDetails);
+    showError(errorMessage);
     window.history.replaceState({}, document.title, window.location.pathname);
   }
   

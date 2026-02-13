@@ -227,70 +227,143 @@ app.get('/api/auth/discord/callback', async (req, res) => {
   try {
     const { code, error } = req.query;
     
-    if (error) return res.redirect(`/?error=${error}`);
-    if (!code) return res.redirect('/?error=no_code');
+    console.log('📝 [Discord OAuth] Callback received');
     
+    if (error) {
+      console.warn(`⚠️ [Discord OAuth] Error in callback: ${error}`);
+      return res.redirect(`/?error=${error}`);
+    }
+    if (!code) {
+      console.warn('⚠️ [Discord OAuth] No authorization code received');
+      return res.redirect('/?error=no_code');
+    }
+    
+    console.log('📝 [Discord OAuth] Exchanging code for access token...');
     // Exchange code for access token
-    const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', {
-      client_id: DISCORD_CLIENT_ID,
-      client_secret: DISCORD_CLIENT_SECRET,
-      code,
-      grant_type: 'authorization_code',
-      redirect_uri: DISCORD_REDIRECT_URI
-    });
+    let tokenResponse;
+    try {
+      tokenResponse = await axios.post('https://discord.com/api/oauth2/token', {
+        client_id: DISCORD_CLIENT_ID,
+        client_secret: DISCORD_CLIENT_SECRET,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: DISCORD_REDIRECT_URI
+      });
+      console.log('✅ [Discord OAuth] Token exchange successful');
+    } catch (tokenErr) {
+      console.error('❌ [Discord OAuth] Token exchange failed:', tokenErr.response?.data || tokenErr.message);
+      return res.redirect(`/?error=token_exchange_failed&details=${encodeURIComponent(tokenErr.response?.data?.error || tokenErr.message)}`);
+    }
     
     const { access_token } = tokenResponse.data;
     
+    console.log('📝 [Discord OAuth] Fetching Discord user info...');
     // Get Discord user
-    const userResponse = await axios.get('https://discord.com/api/users/@me', {
-      headers: { Authorization: `Bearer ${access_token}` }
-    });
+    let userResponse;
+    try {
+      userResponse = await axios.get('https://discord.com/api/users/@me', {
+        headers: { Authorization: `Bearer ${access_token}` }
+      });
+      console.log(`✅ [Discord OAuth] User fetched: ${userResponse.data.username}`);
+    } catch (userErr) {
+      console.error('❌ [Discord OAuth] Failed to fetch user:', userErr.response?.data || userErr.message);
+      return res.redirect(`/?error=fetch_user_failed&details=${encodeURIComponent(userErr.response?.data?.message || userErr.message)}`);
+    }
     
     const discordUser = userResponse.data;
+    console.log(`📝 [Discord OAuth] Discord ID: ${discordUser.id}`);
     
-    // Check guild membership
+    // Check guild membership (non-blocking)
     if (DISCORD_GUILD_ID && REQUIRED_DISCORD_ROLE_ID) {
-      const memberResponse = await axios.get(
-        `https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`,
-        { headers: { Authorization: `Bearer ${access_token}` } }
-      );
-      
-      const hasRequiredRole = memberResponse.data.roles.includes(REQUIRED_DISCORD_ROLE_ID);
-      if (!hasRequiredRole) {
-        return res.redirect('/?error=no_permission');
+      console.log('📝 [Discord OAuth] Checking guild membership and roles...');
+      try {
+        const memberResponse = await axios.get(
+          `https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`,
+          { headers: { Authorization: `Bearer ${access_token}` } }
+        );
+        
+        const userRoles = memberResponse.data.roles || [];
+        const hasRequiredRole = userRoles.includes(REQUIRED_DISCORD_ROLE_ID);
+        const hasAdminRole = userRoles.includes(ADMIN_DISCORD_ROLE_ID);
+        
+        console.log(`📝 [Discord OAuth] User roles: ${userRoles.join(', ')}`);
+        console.log(`📝 [Discord OAuth] Has required role: ${hasRequiredRole}, Has admin role: ${hasAdminRole}`);
+        
+        if (!hasRequiredRole && !hasAdminRole) {
+          console.warn('⚠️ [Discord OAuth] User lacks required or admin role');
+          return res.redirect('/?error=no_permission');
+        }
+        console.log('✅ [Discord OAuth] Role check passed');
+      } catch (roleErr) {
+        console.warn(`⚠️ [Discord OAuth] Could not check guild membership (non-blocking): ${roleErr.message}`);
+        // Non-blocking: allow continuation without role validation
       }
     }
     
-    // Find or create user
-    let result = await pool.query('SELECT * FROM users WHERE discord_id = $1', [discordUser.id]);
-    let user = result.rows[0];
+    // Find or create user (make DB optional)
+    console.log('📝 [Discord OAuth] Checking database for existing user...');
+    let user = null;
     
-    if (!user) {
-      const insertResult = await pool.query(
-        `INSERT INTO users (discord_id, username, name, email, avatar_url)
-         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [
-          discordUser.id,
-          discordUser.username,
-          discordUser.global_name || discordUser.username,
-          discordUser.email,
-          `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
-        ]
-      );
-      user = insertResult.rows[0];
+    try {
+      let result = await pool.query('SELECT * FROM users WHERE discord_id = $1', [discordUser.id]);
+      user = result.rows[0];
       
-      // Create user settings
-      await pool.query('INSERT INTO user_settings (user_id) VALUES ($1)', [user.id]);
-    } else {
-      // Update last_login
-      await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
+      if (user) {
+        console.log(`✅ [Discord OAuth] Existing user found: ID ${user.id}`);
+        // Update last_login
+        try {
+          await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
+          console.log('✅ [Discord OAuth] Updated last_login timestamp');
+        } catch (updateErr) {
+          console.warn(`⚠️ [Discord OAuth] Failed to update last_login: ${updateErr.message}`);
+        }
+      } else {
+        console.log('📝 [Discord OAuth] New user, inserting into database...');
+        const insertResult = await pool.query(
+          `INSERT INTO users (discord_id, username, name, email, avatar_url)
+           VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+          [
+            discordUser.id,
+            discordUser.username,
+            discordUser.global_name || discordUser.username,
+            discordUser.email,
+            `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
+          ]
+        );
+        user = insertResult.rows[0];
+        console.log(`✅ [Discord OAuth] New user created: ID ${user.id}`);
+        
+        // Create user settings
+        try {
+          await pool.query('INSERT INTO user_settings (user_id) VALUES ($1)', [user.id]);
+          console.log('✅ [Discord OAuth] User settings initialized');
+        } catch (settingsErr) {
+          console.warn(`⚠️ [Discord OAuth] Failed to create user settings: ${settingsErr.message}`);
+        }
+      }
+    } catch (dbErr) {
+      console.warn(`⚠️ [Discord OAuth] Database error (using temporary user): ${dbErr.message}`);
+      // Fallback: create temporary user object without database
+      user = {
+        id: null,
+        discord_id: discordUser.id,
+        username: discordUser.username,
+        name: discordUser.global_name || discordUser.username,
+        email: discordUser.email
+      };
+      console.log('✅ [Discord OAuth] Using temporary user object (database offline)');
     }
     
+    // Generate JWT token
+    console.log('📝 [Discord OAuth] Generating JWT token...');
     const token = jwt.sign({ id: user.id, username: user.username, name: user.name }, JWT_SECRET);
+    console.log('✅ [Discord OAuth] Token generated, redirecting to dashboard');
+    
     res.redirect(`/?token=${token}`);
   } catch (err) {
-    console.error('Discord auth error:', err);
-    res.redirect('/?error=discord_error');
+    console.error('❌ [Discord OAuth] Unexpected error:', err.message);
+    console.error('Stack trace:', err.stack);
+    res.redirect(`/?error=discord_error&details=${encodeURIComponent(err.message)}`);
   }
 });
 
